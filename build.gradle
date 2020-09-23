@@ -1,0 +1,39 @@
+//group 'com.pes.spb.t1'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'pes_spb_t1'
+    group 'com.pes.spb.t1'
+    mainClassName = 'com.pes.spb.t1.App'
+    version =  '1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.1.0'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
