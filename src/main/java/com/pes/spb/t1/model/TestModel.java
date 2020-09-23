@@ -7,8 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class TestModel {
     private Integer id;
-    private Integer name;
-    private Integer surname;
+    private String name;
+    private String surname;
 
     protected TestModel() {}
 }
