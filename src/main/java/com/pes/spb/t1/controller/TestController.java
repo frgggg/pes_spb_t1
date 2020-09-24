@@ -34,7 +34,7 @@ public class TestController {
     @ResponseStatus(HttpStatus.OK)
     public TestModelDto put(@PathVariable("id") Integer id, @Validated @RequestBody TestModelDto testModelDto) {
         TestModel updateTestModel = new TestModel(id, testModelDto.getName(), testModelDto.getSurname());
-        TestModel updatedTestModel = testService.updateBuId(updateTestModel);
+        TestModel updatedTestModel = testService.updateById(updateTestModel);
 
         return modelMapper.map(updatedTestModel, TestModelDto.class);
     }

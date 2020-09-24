@@ -44,7 +44,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public TestModel updateBuId(TestModel testModel) {
+    public TestModel updateById(TestModel testModel) {
         serviceValidTestModel(testModel);
         findById(testModel.getId());
 

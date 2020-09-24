@@ -5,6 +5,8 @@ public class UtilParams {
     public static final String EXIST_TEST_MODEL_NAME = "1";
     public static final String EXIST_TEST_MODEL_SURNAME = "1";
 
+    public static final Integer ANOTHER_EXIST_TEST_MODEL_ID = 2;
+
     public static final Integer NOT_EXIST_TEST_MODEL_ID = 1;
 
     public static final Integer NEW_TEST_MODEL_ID = 1;
@@ -19,6 +21,17 @@ public class UtilParams {
     public static String getTooBig(int maxLen) {
         StringBuilder buf = new StringBuilder("");
         for(int i = 0; i < maxLen + 1; i++) {
+            buf.append("a");
+        }
+        return buf.toString();
+    }
+
+    public static String getTooLittle(int minLen) {
+        if(minLen < 0) {
+            throw new IllegalArgumentException("Bad minLen < 0!!!");
+        }
+        StringBuilder buf = new StringBuilder("");
+        for(int i = 0; i < minLen - 1; i++) {
             buf.append("a");
         }
         return buf.toString();

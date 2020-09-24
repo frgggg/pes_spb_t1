@@ -6,7 +6,6 @@ import com.pes.spb.t1.exception.TestServiceException;
 import com.pes.spb.t1.model.TestModel;
 import com.pes.spb.t1.repository.TestRepository;
 
-import com.pes.spb.t1.service.TestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,6 @@ public class TestControllerTest {
 
     @MockBean
     private TestRepository testRepository;
-
-    @MockBean
-    private TestService testService;
 
     @Test
     public void getExist() throws Exception {
@@ -154,9 +150,40 @@ public class TestControllerTest {
         ResultMatcher resultMatcherStatus = status().isOk();
         String newOutTestModelDtoAsString = testModelDtoToString(newDataOutTestModelDto);
 
-        when(testService.updateBuId(newDataInTestModel)).thenReturn(newDataOutTestModel);
+        when(testRepository.findById(OLD_TEST_MODEL_ID)).thenReturn(Optional.of(newDataInTestModel));
+        when(testRepository.findByNameAndNotId(NEW_TEST_MODEL_NAME, OLD_TEST_MODEL_ID)).thenReturn(Optional.empty());
+        when(testRepository.updateById(newDataInTestModel)).thenReturn(newDataInTestModel);
         AllControllerUtil.testUtilPut(mockMvc, postUrl, newDataInTestModelDto, newOutTestModelDtoAsString, resultMatcherStatus);
-        verify(testService).updateBuId(newDataInTestModel);
+        verify(testRepository).findById(OLD_TEST_MODEL_ID);
+        verify(testRepository).findByNameAndNotId(NEW_TEST_MODEL_NAME, OLD_TEST_MODEL_ID);
+        verify(testRepository).updateById(newDataInTestModel);
+    }
+
+    @Test
+    public void putNotExistId() throws Exception {
+        TestModel newNotExistIdInTestModel = new TestModel(NOT_EXIST_TEST_MODEL_ID, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME);
+        TestModelDto newNotExistIdInTestModelDto = new TestModelDto(newNotExistIdInTestModel.getId(), newNotExistIdInTestModel.getName(), newNotExistIdInTestModel.getSurname());
+
+        String postUrl = baseUrl + "/put" + NOT_EXIST_TEST_MODEL_ID;
+        ResultMatcher resultMatcherStatus = status().isBadRequest();
+        String answer = String.format(TEST_SERVICE_IMPL_NO_TEST_MODEL_WITH_ID, NOT_EXIST_TEST_MODEL_ID);
+
+        when(testRepository.findById(NOT_EXIST_TEST_MODEL_ID)).thenReturn(Optional.empty());
+        AllControllerUtil.testUtilPut(mockMvc, postUrl, newNotExistIdInTestModelDto, answer, resultMatcherStatus);
+        verify(testRepository).findById(NOT_EXIST_TEST_MODEL_ID);
+
+    }
+
+    @Test
+    public void putNullName() throws Exception {
+        TestModel newNullNameInTestModel = new TestModel(EXIST_TEST_MODEL_ID, getNull(), NEW_TEST_MODEL_SURNAME);
+        TestModelDto newNullNameInTestModelDto = new TestModelDto(newNullNameInTestModel.getId(), newNullNameInTestModel.getName(), newNullNameInTestModel.getSurname());
+
+        String postUrl = baseUrl + "/put" + NOT_EXIST_TEST_MODEL_ID;
+        ResultMatcher resultMatcherStatus = status().isBadRequest();
+        String answer = VALIDATION_PROBLEMS_PREFIX + VALIDATION_PROBLEM_PREFIX + TEST_MODEL_NAME_NULL;
+
+        AllControllerUtil.testUtilPut(mockMvc, postUrl, newNullNameInTestModelDto, answer, resultMatcherStatus);
     }
 
 }
