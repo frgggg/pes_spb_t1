@@ -12,7 +12,6 @@ import javax.validation.Validator;
 import java.util.*;
 
 @Component
-@Slf4j
 public class TestRepositoryImpl implements TestRepository {
 
     public static final String TEST_REPOSITORY_NO_TEST_MODEL_WITH_ID = "No TestModel with id = %d.";
