@@ -1,62 +1,83 @@
 package com.pes.spb.t1.repository.impl;
 
+import com.pes.spb.t1.exception.TestServiceException;
 import com.pes.spb.t1.model.TestModel;
 import com.pes.spb.t1.repository.TestRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.Validator;
+
+import java.util.Optional;
+
 import static com.pes.spb.t1.util.UtilParams.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TestRepositoryImplTest {
 
     @Autowired
+    private Validator validator;
     private TestRepository repository;
 
-    @Test
-    public void findByIdSuccess() {
-        TestModel saved = repository.save(new TestModel(null, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME));
-        assertNotNull(saved.getId());
-        assertEquals(saved.getName(), NEW_TEST_MODEL_NAME);
-        assertEquals(saved.getSurname(), NEW_TEST_MODEL_SURNAME);
+    @Before
+    public void init() {
+        repository = new TestRepositoryImpl(validator);
     }
 
     @Test
-    public void findByNotExistId() {
-        assertTrue(repository.findById(ANOTHER_NOT_EXIST_TEST_MODEL_ID).isEmpty());
+    public void save() {
+        TestModel forSave = new TestModel(null, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME);
+        TestModel save = repository.save(forSave);
+        assertNotNull(save.getId());
+        assertEquals(save.getName(), NEW_TEST_MODEL_NAME);
+        assertEquals(save.getSurname(), NEW_TEST_MODEL_SURNAME);
+
+        boolean exceptionInSaveExistName = false;
+        try {
+            repository.save(new TestModel(null, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME));
+        } catch (TestServiceException ex) {
+            exceptionInSaveExistName = true;
+        }
+        assertTrue(exceptionInSaveExistName);
     }
 
     @Test
-    public void findByNameAndNotId() {
-        assertTrue(
-                repository.findByNameAndNotId(NOT_EXIST_TEST_MODEL_NAME, null).isEmpty()
-        );
+    public void find() {
+        TestModel forSave = new TestModel(null, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME);
+        TestModel save = repository.save(forSave);
+        TestModel find = repository.findById(save.getId()).get();
+        assertEquals(save.getId(), find.getId());
+        assertEquals(save.getName(), find.getName());
+        assertEquals(save.getSurname(), find.getSurname());
 
-        TestModel save = repository.save(new TestModel(null, NOT_EXIST_TEST_MODEL_NAME, EXIST_TEST_MODEL_SURNAME));
-        assertTrue(
-                repository.findByNameAndNotId(NOT_EXIST_TEST_MODEL_NAME, save.getId()).isEmpty()
-        );
+        boolean notExistWithId1 = true;
+        if(repository.findById(1).isPresent()) {
+            notExistWithId1 = false;
+        }
+        assertTrue(notExistWithId1);
     }
 
     @Test
-    public void saveSuccess() {
-        TestModel saved = repository.save(new TestModel(null, ANOTHER_FIRST_NEW_TEST_MODEL_NAME, ANOTHER_FIRST_NEW_TEST_MODEL_SURNAME));
-        assertNotNull(saved.getId());
-        assertEquals(saved.getName(), ANOTHER_FIRST_NEW_TEST_MODEL_NAME);
-        assertEquals(saved.getSurname(), ANOTHER_FIRST_NEW_TEST_MODEL_SURNAME);
+    public void updateSuccess() {
+        TestModel forSave = new TestModel(null, NEW_TEST_MODEL_NAME, NEW_TEST_MODEL_SURNAME);
+        TestModel save = repository.save(forSave);
+
+        repository.updateById(new TestModel(save.getId(), NEW_ANOTHER_TEST_MODEL_NAME, NEW_ANOTHER_TEST_MODEL_SURNAME));
+        TestModel find = repository.findById(save.getId()).get();
+        assertEquals(save.getId(), find.getId());
+        assertEquals(NEW_ANOTHER_TEST_MODEL_NAME, find.getName());
+        assertEquals(NEW_ANOTHER_TEST_MODEL_SURNAME, find.getSurname());
     }
 
     @Test
-    public void updateById() {
-        TestModel saved = repository.save(new TestModel(null, ANOTHER_SECOND_NEW_TEST_MODEL_NAME, ANOTHER_SECOND_NEW_TEST_MODEL_SURNAME));
-        repository.updateById(new TestModel(saved.getId(), ANOTHER_SECOND_UPDATED_NEW_TEST_MODEL_NAME, ANOTHER_SECOND_NEW_TEST_MODEL_SURNAME));
+    public void updateNotExistId() {
 
-        TestModel find = repository.findById(saved.getId()).get();
-        assertEquals(find.getName(), ANOTHER_SECOND_UPDATED_NEW_TEST_MODEL_NAME);
     }
 }

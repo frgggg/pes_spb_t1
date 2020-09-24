@@ -9,24 +9,16 @@ public class UtilParams {
 
     public static final Integer NOT_EXIST_TEST_MODEL_ID = 1;
 
-    public static final String NOT_EXIST_TEST_MODEL_NAME = "not exist name";
-
-    public static final Integer ANOTHER_NOT_EXIST_TEST_MODEL_ID = 100;
-
     public static final Integer NEW_TEST_MODEL_ID = 1;
     public static final String NEW_TEST_MODEL_NAME = "1";
     public static final String NEW_TEST_MODEL_SURNAME = "1";
 
-    public static final String ANOTHER_FIRST_NEW_TEST_MODEL_NAME = "another_1";
-    public static final String ANOTHER_FIRST_NEW_TEST_MODEL_SURNAME = "another_1";
-
-    public static final String ANOTHER_SECOND_NEW_TEST_MODEL_NAME = "another_2";
-    public static final String ANOTHER_SECOND_NEW_TEST_MODEL_SURNAME = "another_2";
-
-    public static final String ANOTHER_SECOND_UPDATED_NEW_TEST_MODEL_NAME = "another_2";
-
     public static final String NEW_EXIST_MAME_TEST_MODEL_NAME = "1";
     public static final String NEW_EXIST_MAME_TEST_MODEL_SURNAME = "1";
+
+    public static final Integer NEW_ANOTHER_TEST_MODEL_ID = 2;
+    public static final String NEW_ANOTHER_TEST_MODEL_NAME = "2";
+    public static final String NEW_ANOTHER_TEST_MODEL_SURNAME = "2";
 
     public static final Integer OLD_TEST_MODEL_ID = 1;
 
