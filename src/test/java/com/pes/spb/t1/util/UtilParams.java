@@ -9,7 +9,7 @@ public class UtilParams {
 
     public static final Integer NOT_EXIST_TEST_MODEL_ID = 1;
 
-    public static final String NOT_EXIST_TEST_MODEL_NAME = "11111111";
+    public static final String NOT_EXIST_TEST_MODEL_NAME = "not exist name";
 
     public static final Integer ANOTHER_NOT_EXIST_TEST_MODEL_ID = 100;
 
