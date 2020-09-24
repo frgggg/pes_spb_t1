@@ -57,11 +57,7 @@ public class TestRepositoryImplTest {
         assertEquals(save.getName(), find.getName());
         assertEquals(save.getSurname(), find.getSurname());
 
-        boolean notExistWithId1 = true;
-        if(repository.findById(1).isPresent()) {
-            notExistWithId1 = false;
-        }
-        assertTrue(notExistWithId1);
+        assertTrue(repository.findById(1).isEmpty());
     }
 
     @Test
@@ -70,7 +66,9 @@ public class TestRepositoryImplTest {
         TestModel save = repository.save(forSave);
 
         repository.updateById(new TestModel(save.getId(), NEW_ANOTHER_TEST_MODEL_NAME, NEW_ANOTHER_TEST_MODEL_SURNAME));
-        TestModel find = repository.findById(save.getId()).get();
+        Optional<TestModel> optional = repository.findById(save.getId());
+        optional.orElseThrow(() -> new IllegalStateException("updateSuccess(): no TestModel with id = " + save.getId()));
+        TestModel find = optional.get();
         assertEquals(save.getId(), find.getId());
         assertEquals(NEW_ANOTHER_TEST_MODEL_NAME, find.getName());
         assertEquals(NEW_ANOTHER_TEST_MODEL_SURNAME, find.getSurname());
