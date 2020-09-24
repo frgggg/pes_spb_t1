@@ -1,0 +1,30 @@
+package com.pes.spb.t1.util;
+
+public class UtilParams {
+    public static final Integer EXIST_TEST_MODEL_ID = 1;
+    public static final String EXIST_TEST_MODEL_NAME = "1";
+    public static final String EXIST_TEST_MODEL_SURNAME = "1";
+
+    public static final Integer NOT_EXIST_TEST_MODEL_ID = 1;
+
+    public static final Integer NEW_TEST_MODEL_ID = 1;
+    public static final String NEW_TEST_MODEL_NAME = "1";
+    public static final String NEW_TEST_MODEL_SURNAME = "1";
+
+    public static final String NEW_EXIST_MAME_TEST_MODEL_NAME = "1";
+    public static final String NEW_EXIST_MAME_TEST_MODEL_SURNAME = "1";
+
+    public static final Integer OLD_TEST_MODEL_ID = 1;
+
+    public static String getTooBig(int maxLen) {
+        StringBuilder buf = new StringBuilder("");
+        for(int i = 0; i < maxLen + 1; i++) {
+            buf.append("a");
+        }
+        return buf.toString();
+    }
+
+    public static String getNull() {
+        return null;
+    }
+}

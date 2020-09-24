@@ -36,7 +36,7 @@ public class TestController {
         TestModel updateTestModel = new TestModel(id, testModelDto.getName(), testModelDto.getSurname());
         TestModel updatedTestModel = testService.updateBuId(updateTestModel);
 
-        return modelMapper.map(testService.updateBuId(updatedTestModel), TestModelDto.class);
+        return modelMapper.map(updatedTestModel, TestModelDto.class);
     }
 
     @PostMapping(value = "/post")

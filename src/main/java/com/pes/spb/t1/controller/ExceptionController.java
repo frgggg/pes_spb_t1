@@ -15,6 +15,8 @@ import org.springframework.web.context.request.WebRequest;
 public class ExceptionController {
 
     public static final String NOT_IMPLEMENTED_MSG = "not implemented";
+    public static final String VALIDATION_PROBLEMS_PREFIX = "Validation problems: ";
+    public static final String VALIDATION_PROBLEM_PREFIX = "\n";
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<String> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex, WebRequest request) {
@@ -24,9 +26,9 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<StringBuilder> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex, WebRequest request) {
-        StringBuilder message = new StringBuilder("Validation problems: ");
+        StringBuilder message = new StringBuilder(VALIDATION_PROBLEMS_PREFIX);
         for(ObjectError objectError: ex.getBindingResult().getAllErrors()) {
-            message.append("\n");
+            message.append(VALIDATION_PROBLEM_PREFIX);
             message.append(objectError.getDefaultMessage());
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
