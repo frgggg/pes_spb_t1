@@ -9,5 +9,6 @@ public interface TestRepository {
     TestModel save(TestModel testModel);
     TestModel updateById(TestModel testModel);
     Optional<TestModel> findByName(String name);
+    Optional<TestModel> findByNameAndNotId(String name, Integer id);
 
 }
