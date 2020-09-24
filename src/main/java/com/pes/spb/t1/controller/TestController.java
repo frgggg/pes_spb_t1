@@ -3,13 +3,12 @@ package com.pes.spb.t1.controller;
 import com.pes.spb.t1.dto.TestModelDto;
 import com.pes.spb.t1.model.TestModel;
 import com.pes.spb.t1.service.TestService;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
 @RequestMapping("${base.path}")
 public class TestController {
@@ -32,6 +31,7 @@ public class TestController {
     }
 
     @PutMapping(value = "/put{id}")
+    @ResponseStatus(HttpStatus.OK)
     public TestModelDto put(@PathVariable("id") Integer id, @Validated @RequestBody TestModelDto testModelDto) {
         TestModel updateTestModel = new TestModel(id, testModelDto.getName(), testModelDto.getSurname());
         TestModel updatedTestModel = testService.updateBuId(updateTestModel);
@@ -40,6 +40,7 @@ public class TestController {
     }
 
     @PostMapping(value = "/post")
+    @ResponseStatus(HttpStatus.CREATED)
     public TestModelDto post(@Validated @RequestBody TestModelDto testModelDto) {
         TestModel newTestModel = new TestModel(null, testModelDto.getName(), testModelDto.getSurname());
         TestModel savedTestModel = testService.save(newTestModel);
