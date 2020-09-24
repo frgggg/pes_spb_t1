@@ -42,8 +42,9 @@ public class TestController {
     @PostMapping(value = "/post")
     public TestModelDto post(@Validated @RequestBody TestModelDto testModelDto) {
         TestModel newTestModel = new TestModel(null, testModelDto.getName(), testModelDto.getSurname());
+        TestModel savedTestModel = testService.save(newTestModel);
         return modelMapper.map(
-                newTestModel,
+                savedTestModel,
                 TestModelDto.class
         );
     }

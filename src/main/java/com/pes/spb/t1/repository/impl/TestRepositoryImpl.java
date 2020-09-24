@@ -3,15 +3,16 @@ package com.pes.spb.t1.repository.impl;
 import com.pes.spb.t1.exception.TestServiceException;
 import com.pes.spb.t1.model.TestModel;
 import com.pes.spb.t1.repository.TestRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
 
 @Component
+@Slf4j
 public class TestRepositoryImpl implements TestRepository {
 
     public static final String TEST_REPOSITORY_NO_TEST_MODEL_WITH_ID = "No TestModel with id = %d.";
@@ -38,11 +39,6 @@ public class TestRepositoryImpl implements TestRepository {
     }
 
     @Override
-    public Optional<TestModel> findByName(String name) {
-        return Optional.of(testModelMap.get(nameMap.get(name)));
-    }
-
-    @Override
     public Optional<TestModel> findByNameAndNotId(String name, Integer id) {
         if(nameMap.containsKey(name)) {
             if(!nameMap.get(name).equals(id)) {
@@ -61,7 +57,6 @@ public class TestRepositoryImpl implements TestRepository {
 
         int newId = getNewId();
         testModel.setId(newId);
-
         TestModel newTestModel = new TestModel(testModel.getId(), testModel.getName(), testModel.getSurname());
         testModelMap.put(newId, newTestModel);
         nameMap.put(newTestModel.getName(),newId);
@@ -74,19 +69,17 @@ public class TestRepositoryImpl implements TestRepository {
         repositoryValidTestModel(testModel);
 
         int id = testModel.getId();
-        Optional<TestModel> optionalTestModel = findById(id);
-        optionalTestModel.orElseThrow(
+        Optional<TestModel> optionalOldTestModel = findById(id);
+        optionalOldTestModel.orElseThrow(
                 () -> TestServiceException.getFromQuery(String.format(TEST_REPOSITORY_NO_TEST_MODEL_WITH_ID, id))
         );
 
         String newName = testModel.getName();
-        if(nameMap.get(newName) != null) {
-            if (!nameMap.get(newName).equals(id)) {
-                throw TestServiceException.getFromQuery(String.format(TEST_REPOSITORY_TEST_MODEL_WITH_EXIST_NAME, newName));
-            }
+        if(findByNameAndNotId(newName, id).isPresent()) {
+            throw TestServiceException.getFromQuery(String.format(TEST_REPOSITORY_TEST_MODEL_WITH_EXIST_NAME, newName));
         }
 
-        TestModel oldTestModel = optionalTestModel.get();
+        TestModel oldTestModel = optionalOldTestModel.get();
         String oldName = oldTestModel.getName();
         nameMap.remove(oldName);
         testModelMap.remove(id);
